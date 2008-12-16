@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://sdbizo/locale/sdbizo.dtd">
+
+<!-- 
+/*
+ * Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
+ * file except in compliance with the License. You may obtain a copy of the License at 
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under 
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+ * ANY KIND, either express or implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ * 
+ */
+ -->
+
+<dialog id="sdbizo_dialog_get_attributes" title="Get Attributes"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        onload="customizeWithInput();window.sizeToContent();" buttons="accept,cancel" buttonlabelaccept="Get Attributes"
+        ondialogaccept="return doGetAttributes();" buttonlabelcancel="Cancel" ondialogcancel="return true;"
+        defaultButton="cancel">          
+                
+  <dialogheader id="sdbizo_dialog_get_attributes_header" title="Get Attributes?" description=""/>      
+  
+  <groupbox>
+      <caption label="Filter"/>      
+      <label value="Names:"/>
+      <vbox>
+      <textbox id="sdbizo_dialog_get_attributes_names" multiline="true"/>
+      <label value="[one name per line]"/>
+      </vbox>
+   </groupbox>
+  
+       
+   <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />
+   
+   <script>
+    var domain_name = window.arguments[0];
+    var item_name = window.arguments[1];
+    var get_attributes_function = window.arguments[2];    
+        
+    function doGetAttributes() {
+      get_attributes_function(domain_name, item_name, $('#sdbizo_dialog_get_attributes_names').val().split("\n"));
+      return true;
+    }  
+    
+    function customizeWithInput() {
+      $('#sdbizo_dialog_get_attributes_header').attr('description', "Get attributes for '"+domain_name+"."+item_name+"'?");
+    }
+   </script>
+        
+</dialog>
+

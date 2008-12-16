@@ -1,0 +1,5 @@
+overlay	chrome://browser/content/browser.xul	chrome://sdbizo/content/sdbizo.xul
+
+content	sdbizo	chrome/content/sdbizo/
+
+locale	sdbizo	en-US	chrome/locale/sdbizo/en-US/

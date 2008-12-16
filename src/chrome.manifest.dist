@@ -1,0 +1,5 @@
+overlay	chrome://browser/content/browser.xul	chrome://sdbizo/content/sdbizo.xul
+
+content	sdbizo	jar:chrome/sdbizo.jar!/content/sdbizo/
+
+locale	sdbizo	en-US	jar:chrome/sdbizo.jar!/locale/sdbizo/en-US/

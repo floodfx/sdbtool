@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<r:RDF xmlns:r="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+       xmlns="http://www.mozilla.org/2004/em-rdf#">
+<!-- sdbizo Extension update RDF file -->
+<r:Description about="urn:mozilla:extension:sdbizo@bizo.com">
+  <updates>
+    <r:Seq>
+      <r:li>
+        <r:Description>
+          <version>__VERSION__.__BUILD__</version>
+          <targetApplication>
+            <r:Description>
+              <id>{sdbizo@bizo.com}</id>
+              <minVersion>1.5</minVersion>
+              <maxVersion>3.0.*</maxVersion>
+              <updateLink>https://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.xpi</updateLink>
+            </r:Description>
+          </targetApplication>
+        </r:Description>
+      </r:li>
+    </r:Seq>
+  </updates>
+</r:Description>
+</r:RDF>
