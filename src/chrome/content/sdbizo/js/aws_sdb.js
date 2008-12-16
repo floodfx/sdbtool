@@ -20,7 +20,7 @@
  *
  * NOTE: 
  * Requires JQuery (tested with 1.2.6)
- * and related js code (sha1.js, sdb-js-scratchpad.js)
+ * and related js code (sha1.js)
  * 
  */
 function SDB(access_key, secret_key, version) {
