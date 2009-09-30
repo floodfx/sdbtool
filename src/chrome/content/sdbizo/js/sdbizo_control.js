@@ -215,6 +215,10 @@ var runSelect = new SdbizoAction('runSelect', function() {
   var action = this.action; 
         
   var expr = $('#sdb_query_domain_expression').val();
+  if(expr == null || expr.length == 0) {
+    prompts.alert(window, "Warning", "Please enter a select expression.");
+    return;
+  }
   
   // reset next token
   if(expr != query_expr) {
@@ -226,7 +230,17 @@ var runSelect = new SdbizoAction('runSelect', function() {
   sdb.select(expr, function(results) {
     try {
       if(results.error) { handleError(this.action, results); return;}
-      results_tree_view.setResults(itemsToResults("Domain", results));
+
+      // select correct domain for add/update attrs
+      var find_domain = new RegExp("\\\s+from\\\s+([A-Za-z0-9_.-]+)\\\s*");
+      var found_domain = find_domain.exec(expr)[1];
+      for(var i = 0; i < domains_tree_view.domains.length;i++) {
+        if(domains_tree_view.domains[i] == found_domain) {
+          $('.domainList').val(domains_tree_view.domains[i]);
+          break;
+        } 
+      }
+      results_tree_view.setResults(itemsToResults(found_domain, results));
       query_next = results.next_token;
       $('#sdb_results_next_button').attr('disabled', query_next.length == 0);
     }

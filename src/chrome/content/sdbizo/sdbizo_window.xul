@@ -112,7 +112,7 @@
             
               <hbox id="sdb_domains_create_controls"> 
                 <spacer flex="1"/>
-                <textbox id="sdb_create_domain_input" size ="20" />
+                <textbox id="sdb_create_domain_input" size ="20" emptytext="e.g. mydomain"/>
                 <button id="sdb_domains_create_button" label="Create Domain" oncommand="SdbizoController.execute('createDomain')"/>                        
               </hbox>
           
