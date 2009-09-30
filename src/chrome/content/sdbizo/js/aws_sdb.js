@@ -29,7 +29,7 @@ function SDB(access_key, secret_key, version) {
   var aws_access_key = access_key;
   var aws_secret_key = secret_key;
   var sdb_base_url = "http://sdb.amazonaws.com";
-  var sdb_version = isEmpty(version) ? "2007-11-07" : version;
+  var sdb_version = isEmpty(version) ? "2009-04-15" : version;
   
   /****  PRIVATE FUNCTIONS ****/
   /**
@@ -370,15 +370,10 @@ function SDB(access_key, secret_key, version) {
   }
   
   /**
-   * Query - returns Set of Items that match the given query expression.
-   * @param domain (required) - the name of the domain being queried
-   * @param query_expr (required) - the expression used to query the domain
+   * Select - returns Set of Items that match the given query expression.
+   * @param select_expr (required) - the expression used to query the domain
    * @param callback (required) - the function to pass the results to
-   * @param max_items (optional) - integer limiting the number of items returned
-   * @param next_token (optional) - string used to page through results
-   * @param with_attributes (optional) - boolean specifying the results should include attributes
-   * @param attribute_names (optional) - array of names of attributes to include -- passing this 
-   *                                     automatically assumes with_attributes = true
+   * @param next_token (optional) - string used to page through results 
    * @return a JS Object with the following keys:
    *    * items - a JS Object who's keys are the item names.
    *             if with_attributes is true the values of the items JS Object are also
@@ -391,65 +386,30 @@ function SDB(access_key, secret_key, version) {
    *      * box_usage - a number that show amount of system resources used in operation
    * @throws Exception if the request failed
    */ 
-  this.query = function(domain, query_expr, callback) {
-    var action = "Query";
-    var max_items, next_token, with_attributes, attribute_names = null;
-    // handle param optionality (not really a word but neither is truthiness and look at Colbert!)
-    for(var i = 3; i < arguments.length; i++) {
-      var arg = arguments[i];
-      switch(typeof arg) {
-        case "string": next_token = arg;break;
-        case "number": max_items = arg;break;
-        case "boolean": with_attributes = arg;break;
-        case "object": attribute_names = arg;break;
-      }
-    }    
+  this.select = function(select_expr, callback, next_token) {
+    var action = "Select";
     // validate params    
     var params = {};
-    checkArgument(!isEmpty(domain), action+" requires a domain");
-    params["DomainName"] = domain;
     checkArgument(typeof callback == "function", action+" requires a callback");
-    if(!isEmpty(max_items)) { 
-      params["MaxNumberOfItems"] = max_items+""; // need a string
-      checkArgument(0 < params["MaxNumberOfItems"] && params["MaxNumberOfItems"] <= 250, "Max items between 1 to 250");
-    }
     if(!isEmpty(next_token)) params["NextToken"] = next_token; 
-    if(!isEmpty(query_expr)) params["QueryExpression"] = query_expr;                                      
+    if(!isEmpty(select_expr)) params["SelectExpression"] = query_expr;                                      
     
-    // check if query with attributes
-    if((!isEmpty(with_attributes) && with_attributes) || (!isEmpty(attribute_names))) {
-      action = "QueryWithAttributes";
-      if(!isEmpty(attribute_names)) {
-        for(var i = 0; i < attribute_names.length; i++) {
-          params["AttributeName."+(i+1)] = attribute_names[i];
-        }
-      }
-    }
-
     // use jquery to make request    
     ajaxRequest(buildRequestUrl(action, params), function(result, data) {    
       if(result.error != null) callback(result);// just return the error
       var items = [];
-      if(action == "Query") {
-        $("ItemName", data).each(function(i) {
-          items.push({name:$(this).text()}) ;
+      $("Item", data).each(function(i) {
+        var item = {attrs:{},name:$("Name:first", $(this)).text()};
+        $("Attribute", $(this)).each(function(i) {
+          var name = $("Name", $(this)).text();
+          var val  = $("Value", $(this)).text();
+          if(item.attrs[name] == null) {
+            item.attrs[name] = [];
+          }
+          item.attrs[name].push(val);
         });
-      } 
-      // query with attrs
-      else {
-        $("Item", data).each(function(i) {
-          var item = {attrs:{},name:$("Name:first", $(this)).text()};
-          $("Attribute", $(this)).each(function(i) {
-            var name = $("Name", $(this)).text();
-            var val  = $("Value", $(this)).text();
-            if(item.attrs[name] == null) {
-              item.attrs[name] = [];
-            }
-            item.attrs[name].push(val);
-          });
-          items.push(item);
-        });
-      }
+        items.push(item);
+      });
       result.items = items;
       result.next_token = $("NextToken", data).text();
       callback(result);

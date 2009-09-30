@@ -55,7 +55,6 @@ var unlock_ui = function() {
   $('.loader').attr('hidden', true);
   $('button').attr('disabled', false);
   // keep the same state for some buttons
-  $('#sdb_pref_save_button').attr('disabled', saveButtonDisabled);
   $('#sdb_domains_delete_button').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length == 0);
   $('#sdb_results_next_button').attr('disabled', query_next == null || query_next.length == 0);
 }
@@ -87,12 +86,10 @@ var closeError = function() {
   }
 }
 
-
 var ensureDomainSelected = function(cur_index, error_msg) {
   if(cur_index == -1) {prompts.alert(window, "Warning", error_msg);}
   return cur_index;
 }
-
 
 var domainSelected = function(element) {  
   var selection = document.getElementById('sdb_domain_tree').currentIndex;
@@ -100,32 +97,19 @@ var domainSelected = function(element) {
   $('.domainList').val(domains_tree_view.domains[selection]);
 }
 
-
-var savePrefs = function() {
-  sdbizo.aws_access_key = $('#sdb_pref_access_key').val();
-  sdbizo.aws_secret_key = $('#sdb_pref_secret_key').val();
-  sdbizo.show_delete_domain_button = $('#sdb_pref_show_domain_delete:checked').length == 1;
+var resetPrefs = function() {
+  sdbizo = new Sdbizo();
   sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key);
-  sdbizo.savePrefs();
-  $('#sdb_pref_save_button').attr('disabled', true);
-  saveButtonDisabled = true;
-}
-
-var saveButtonDisabled = true;
-var enableSaveButton = function() {
-  $('#sdb_pref_save_button').attr('disabled', false);
-  saveButtonDisabled = false;
+  return true;
 }
 
 var toggleDeleteButton = function() {
-  enableSaveButton();
   $('#sdb_domains_delete_button').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length != 1);
   $('#sdb_domains_contextmenu_delete').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length != 1);
 }
 
 
 var sdbizoLoad = function() {
-  window.sizeToContent();
   $('#sdb_pref_access_key').val(sdbizo.aws_access_key);
   $('#sdb_pref_secret_key').val(sdbizo.aws_secret_key);
   $('#sdb_pref_show_domain_delete').attr('checked', sdbizo.show_delete_domain_button);
@@ -227,30 +211,22 @@ var query_max  = null;
 var query_expr = null;
 var query_wa   = null;
 
-var queryDomain = new SdbizoAction('queryDomain', function() {
+var runSelect = new SdbizoAction('runSelect', function() {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_query_domain').selectedIndex;
-  var selection = ensureDomainSelected(cur_index, "Please select a domain first");
-  if(selection < 0) return;
-  
-  var domain_name = document.getElementById('sdb_query_domain').selectedItem.value;      
+        
   var expr = $('#sdb_query_domain_expression').val();
-  var max_items = parseInt($('#sdb_query_domain_max_items').val());
-  var with_attributes = $('#sdb_checkbox_query_with_attributes:checked').length == 1;   
   
   // reset next token
-  if(expr != query_expr || max_items != query_max || with_attributes != query_wa) {
+  if(expr != query_expr) {
     query_next = null;
   }    
   query_expr = expr;
-  query_max  = max_items;
-  query_wa   = with_attributes;
   
   lock_ui();  
-  sdb.query(domain_name, expr, function(results) {
+  sdb.select(expr, function(results) {
     try {
       if(results.error) { handleError(this.action, results); return;}
-      results_tree_view.setResults(itemsToResults(domain_name, results));
+      results_tree_view.setResults(itemsToResults("Domain", results));
       query_next = results.next_token;
       $('#sdb_results_next_button').attr('disabled', query_next.length == 0);
     }
@@ -258,7 +234,7 @@ var queryDomain = new SdbizoAction('queryDomain', function() {
     finally {
       unlock_ui();
     }  
-  }, max_items, with_attributes, query_next);
+  }, query_next);
   
 });
 
@@ -352,59 +328,30 @@ var getAttributes = function(domain_name, item_name, names) {
   });  
 }
 
-var domainMetadata = {};
 var loadDomainMetadata = new SdbizoAction('loadDomainMetadata', function() {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_domain_metadata_domain').selectedIndex;
+  var cur_index = document.getElementById('sdb_domain_tree').currentIndex;
   var selection = ensureDomainSelected(cur_index, "Please select a domain first");
   if(selection < 0) return;
   
-  var unit_label = function() {
-    if($('#sdb_domain_metadata_show_bytes_in_gb:checked').length == 1) {
-      return 'GB';
-    }
-    return 'bytes';
-  }
-  
-  var unit_size = function(bytes) {
-    if($('#sdb_domain_metadata_show_bytes_in_gb:checked').length == 1) {
-      return bytes_to_gb(bytes);
-    }
-    return bytes;
-  }
-  
-  var setDomainMetadata = function() {
-    $('#sdb_domain_metadata_item_count').val(domainMetadata.item_count);
-    $('#sdb_domain_metadata_item_names_size_bytes').val(unit_size(domainMetadata.item_names_size_bytes));
-    $('#sdb_domain_metadata_item_names_size_bytes_units').val(unit_label());
-    $('#sdb_domain_metadata_attribute_name_count').value = domainMetadata.attribute_name_count;
-    $('#sdb_domain_metadata_attribute_names_size_bytes').val(unit_size(domainMetadata.attribute_names_size_bytes));
-    $('#sdb_domain_metadata_attribute_names_size_bytes_units').val(unit_label());
-    $('#sdb_domain_metadata_attribute_value_count').value = domainMetadata.attribute_value_count;
-    $('#sdb_domain_metadata_attribute_values_size_bytes').val(unit_size(domainMetadata.attribute_values_size_bytes));
-    $('#sdb_domain_metadata_attribute_values_size_bytes_units').val(unit_label());
-    var date = new Date();
-    date.setTime(domainMetadata.timestamp*1000); // add extra digits
-    $('#sdb_domain_metadata_updated_at').val(date.toString());
+  var setDomainMetadata = function(domain, domainMetadata) {
+    window.openDialog("chrome://sdbizo/content/sdbizo_domain_meta.xul", "sdbizo_domain_meta", "chrome", {domain:domain, domainMetadata:domainMetadata})    
   }
   
   if(arguments.length == 0 || !arguments[0] || domainMetadata.timestamp == null) {   
-    var domain_name = document.getElementById('sdb_domain_metadata_domain').selectedItem.value;   
+    var domain_name = domains_tree_view.domains[selection];   
     lock_ui();
     sdb.domainMetadata(domain_name, function(results) {
       try {
         if(results.error) { handleError(this.action, results); return;}
         domainMetadata = results;          
-        setDomainMetadata();
+        setDomainMetadata(domain_name, domainMetadata);
       }
       catch(ex) {handleException(this.action, ex);}
       finally {
         unlock_ui();
       }  
     });
-  }
-  else {
-    setDomainMetadata();
   }      
   
 });
@@ -541,12 +488,15 @@ var deleteAttributes = function(domain_name, item_name, attributes) {
   });  
 }
 
+var showPrefs = new SdbizoAction('showPrefs', function()  {
+  window.openDialog("chrome://sdbizo/content/sdbizo_prefs.xul", "sdbizo_prefs", "chrome", resetPrefs);
+});
 
 
 // add actions to controller
 SdbizoController.addAction(reloadDomains);
 SdbizoController.addAction(loadDomainMetadata);
-SdbizoController.addAction(queryDomain);
+SdbizoController.addAction(runSelect);
 SdbizoController.addAction(confirmDeleteDomain);
 SdbizoController.addAction(createDomain);
 SdbizoController.addAction(getAttributesPrompt);
@@ -555,3 +505,4 @@ SdbizoController.addAction(deleteAttributePrompt);
 SdbizoController.addAction(deleteAttributeValuePrompt);
 SdbizoController.addAction(putAttributes);
 SdbizoController.addAction(showAbout);
+SdbizoController.addAction(showPrefs);

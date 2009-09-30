@@ -21,8 +21,7 @@
  -->
 
 <window id="sdbizo_window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  xmlns:html="http://www.w3.org/1999/xhtml" width="800" height="600" title="SDB Tool" 
-  persist="width height screenX screenY sizemode" 
+  xmlns:html="http://www.w3.org/1999/xhtml" title="SDB Tool" 
   resizeable="true" scrollbars="true"
   hidechrome="false"
   onload="sdbizoLoad();">
@@ -47,6 +46,7 @@
        <hbox minwidth="16px"><image class="loader" id="sdb_loader" src="images/ajax-loader.gif" hidden="true"/></hbox>
        <label style="font-size:20px">Simple DB Tool</label>
        <button label="About" oncommand="SdbizoController.execute('showAbout');"/>
+       <button label="Config" oncommand="SdbizoController.execute('showPrefs');"/>
      </hbox>
   
      <!-- main body -->
@@ -57,68 +57,26 @@
          <vbox flex="1">
            <groupbox>
              <caption>
-               <label value="Query" style="font-weight:bold;"/>
+               <label value="Select" style="font-weight:bold;"/>
              </caption>
              <grid>
                <columns>
                  <column/>
                  <column/>
                </columns>
-               <rows>
+               <rows>                 
                  <row>
-                   <label value="Query Domain"/>
-                   <menulist class="domainList" id="sdb_query_domain" label="[Select Domain]">
-                     <menupopup></menupopup>
-                   </menulist>
+                   <vbox>
+                     <label value="Select Expression"/>
+                     <textbox id="sdb_query_domain_expression" cols="50" row="6" multiline="true" emptytext="e.g. select output_list from domain_name [where expression] [sort_instructions] [limit limit]" style="font-family:monospace;overflow:auto;"/>
+                     <label value="Documentation" href="http://docs.amazonwebservices.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/index.html?UsingSelect.html" class="text-link"/>
+                   </vbox>
                  </row>
-                 <row>
-                   <spacer/>
-                   <hbox align="center">
-                     <checkbox id="sdb_checkbox_query_with_attributes" label="with attributes"/>
-                     <spacer flex="1"/>
-                     <label value="page size" />
-                     <textbox id="sdb_query_domain_max_items" type="number" min="1" max="1024" size="3" value="100"/>
-                   </hbox>
-                 </row>
-                 <row>
-                   <label value="Query Expression"/>
-                   <textbox id="sdb_query_domain_expression" cols="35" multiline="true"  style="overflow:auto"/>
-                 </row>
-                 <row><spacer/><label value="e.g. ['attribute_name'='attibute_value']"/></row>
                </rows>
              </grid>
-             
-             <separator/>
-             <hbox aligh="left"><spacer flex="1"/><button label="Run Query" oncommand="SdbizoController.execute('queryDomain');"/></hbox>
 
-             <vbox>
-               <caption style="font-weight:bold;">Reference</caption>
-               <splitter style="background-color:#DDD; border:1px #CCC solid;" collapse="after" state="collapsed" persist="state">
-                 <grippy/>
-               </splitter>
-               <groupbox>
-                 <grid id="sdb_reference_box" >
-                   <columns>
-                     <column/>
-                     <column width="240px"/>
-                   </columns>
-                   <rows>
-                     <row><label>=</label><description>Attribute value equals the specified constant (['city' = 'Seattle'], ['city' = 'Seattle' or 'city' = 'Portland’])</description></row>
-                     <row><label>!=</label><description>Attribute value does not equal the specified constant (['name' != 'Al'], ['name' != 'Al' and 'name' != 'Bob']) </description></row>
-                     <row><label>&gt;</label><description>Attribute value is greater than the specified constant (['weight' &gt; '0034']) </description></row>
-                     <row><label>&gt;=</label><description>Attribute value is greater than or equal to the specified constant ('weight' &gt;= '065']) </description></row>
-                     <row><label>&lt;</label><description>Attribute value is less than the specified constant (['weight' &lt; '0034']) </description></row>
-                     <row><label>&lt;=</label><description>Attribute value is less than or equal to the specified constant (['year' &lt;= '2000']) </description></row>
-                     <row><label>starts‐with </label><description>Attribute value starts with the specified constant (['author' starts‐with 'Robert']) </description></row>
-                     <row><label>does‐not‐start-with</label><description>Attribute value does not start with the specified constant (['author' does‐not‐start‐with 'Henry']) </description></row>
-                     <row><label>intersection</label><description>Determine the intersection of ItemName sets (['first name' = 'John'] intersection ['last name' = 'Smith']) </description></row>
-                     <row><label>union</label><description>Determine the union of ItemName sets (['tag' starts‐with 'Amazon'] union ['description' = 'SimpleDB']) </description></row>
-                     <row><label>not</label><description>Determine the complement of ItemName set and all the items in the domain (not ['country' = 'USA' or 'country' = 'UK']) </description></row>
-                     <row><label>sort</label><description>Sorts the results in ascending (default) or descending order (['year' &lt;= '2000'] sort ‘year’ desc).</description></row>
-                   </rows>
-                 </grid>
-               </groupbox>
-             </vbox>
+             <hbox aligh="left"><spacer flex="1"/><button label="Run Select" oncommand="SdbizoController.execute('runSelect');"/></hbox>
+
            </groupbox>
       
             <groupbox>
@@ -131,6 +89,7 @@
               <popupset>
                 <popup id="sdb_domains_contextmenu">        
                   <menuitem id="sdb_domains_contextmenu_delete" oncommand="SdbizoController.execute('confirmDeleteDomain');" label="Delete this domain..." />
+                  <menuitem oncommand="SdbizoController.execute('loadDomainMetadata');" label="Show Metadata" />
                   <menuitem oncommand="SdbizoController.execute('reloadDomains');" label="Reload Domains" />
                 </popup>
               </popupset>
@@ -145,6 +104,7 @@
             
               <hbox id="sdb_domains_reload_delete_controls">
                 <button id="sdb_domains_reload_button" label="Reload Domains" oncommand="SdbizoController.execute('reloadDomains');"/><spacer flex="1"/>
+                <button id="sdb_domains_meta_button" label="Show Metadata" oncommand="SdbizoController.execute('loadDomainMetadata');"/><spacer flex="1"/>
                 <button id="sdb_domains_delete_button" label="Delete Domain..." oncommand="SdbizoController.execute('confirmDeleteDomain');"/>
               </hbox>
         
@@ -158,6 +118,15 @@
           
             </groupbox>
       
+            <groupbox>
+              <caption>
+                <label value="Log" style="font-weight:bold;"/>
+              </caption>
+              <splitter id="sdb_log_splitter" style="background-color:#DDD; border:1px #CCC solid;" collapse="after" state="collapsed" persist="state">
+                <grippy id="sdb_log_grippy"/>
+              </splitter>
+              <textbox  multiline="true" readonly="true" id="sdb_log" rows="10" style="overflow:auto"/>
+            </groupbox>     
       
             </vbox>            
           </vbox><!-- end left column -->  
@@ -199,126 +168,41 @@
                 <spacer flex="1" />
                 <button id="sdb_results_next_button" label="Next Results" oncommand="SdbizoController.execute('queryDomain');" disabled="true"/>
               </hbox>
-              <hbox id="sdb_results_get_put_controls" align="center" minwidth="400px">
-                <groupbox align="start">
-                  <caption>Add/Replace Attributes</caption>
-                  <grid>
-                    <columns>
-                      <column/>
-                    </columns>
-                    <rows align="start">
-                      <row align="center">
-                        <label value="Domain"/>
-                        <menulist class="domainList" id="sdb_put_attribute_domain" label="[Select Domain]">
-                          <menupopup></menupopup>
-                        </menulist>
-                      </row>
-                      <row align="center"><label value="Item"/><textbox id="sdb_results_put_attribute_item" /></row>
-                      <row align="center"><label value="Name"/><textbox id="sdb_results_put_attribute_name"/></row>
-                      <row><label value="Values"/><textbox id="sdb_results_put_attribute_values" style="overflow:auto" multiline="true" cols="40" emptytext="[one value per line]"/></row>
-                      <row><spacer flex="1"/><checkbox id="sdb_results_put_attribute_replace" label="replace existing values"/></row>
-                      <row><spacer/><spacer/></row>
-                      <row><spacer flex="1"/><hbox pack="end"><button id="sdb_results_put_attributes_button" label="Put Attributes" oncommand="SdbizoController.execute('putAttributes');"/></hbox></row>
-                    </rows>
-                  </grid>
-                  <separator/>
-        
-                </groupbox>
-                <spacer flex="1"/>
-                
-              </hbox>
+              
             </groupbox>
+            
+            <hbox id="sdb_results_get_put_controls" align="center" minwidth="400px">
+              <groupbox align="start">
+                <caption>Add/Replace Attributes</caption>
+                <grid>
+                  <columns>
+                    <column/>
+                  </columns>
+                  <rows align="start">
+                    <row align="center">
+                      <label value="Domain"/>
+                      <menulist class="domainList" id="sdb_put_attribute_domain" label="[Select Domain]">
+                        <menupopup></menupopup>
+                      </menulist>
+                    </row>
+                    <row align="center"><label value="Item"/><textbox id="sdb_results_put_attribute_item" /></row>
+                    <row align="center"><label value="Name"/><textbox id="sdb_results_put_attribute_name"/></row>
+                    <row><label value="Values"/><textbox id="sdb_results_put_attribute_values" style="overflow:auto" multiline="true" cols="40" emptytext="[one value per line]"/></row>
+                    <row><spacer flex="1"/><checkbox id="sdb_results_put_attribute_replace" label="replace existing values"/></row>
+                    <row><spacer/><spacer/></row>
+                    <row><spacer flex="1"/><hbox pack="end"><button id="sdb_results_put_attributes_button" label="Put Attributes" oncommand="SdbizoController.execute('putAttributes');"/></hbox></row>
+                  </rows>
+                </grid>
+                <separator/>
+        
+                <spacer flex="1"/>
+              </groupbox>
+            </hbox>
+
       
           </vbox>
-          <!--  end middle column -->
-    
-          <splitter />
-         
-          <!-- right column -->
-          <vbox flex="1">
-            <hbox flex="1" >         
-              <vbox style="border-right:1px solid #999;" >
-               <spacer flex="1"/>
-               <vbox  style="border:1px solid #999;">
-                 <label value="m" class="monospace"/>
-                 <label value="e" class="monospace"/>
-                 <label value="t" class="monospace"/>
-                 <label value="a" class="monospace"/>
-               </vbox>
-               <spacer flex="1"/>
-             </vbox>
-             
-             <splitter style="background-color:#DDD; border:1px #CCC solid;" collapse="after" persist="state">
-               <spacer flex="1"/>
-               <grippy flex="1"/>
-             </splitter>
 
-             <vbox id="sdb_prefs_box">
-               <groupbox>
-                 <caption><label style="font-weight:bold">Domain Metadata</label></caption>
-                 <grid>
-                   <columns>
-                     <column/>
-                     <column/>
-                   </columns>
-                   <rows>        
-                     <row>              
-                       <label value="Domain"/>
-                       <menulist class="domainList" id="sdb_domain_metadata_domain" label="[Select Domain]">
-                         <menupopup></menupopup>
-                       </menulist>
-                     </row>
-                     <row align="center"><label value="Item Count"/><textbox id="sdb_domain_metadata_item_count" hidespinbuttons="true" readonly="true" type="number"/><spacer width="50px"/></row>
-                     <row align="center"><label value="Item Names Size"/><textbox id="sdb_domain_metadata_item_names_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_item_names_size_bytes_units" value="bytes"/></row>
-                     <row align="center"><label value="Attribute Name Count"/><textbox id="sdb_domain_metadata_attribute_name_count" hidespinbuttons="true" readonly="true" type="number"/><spacer/></row>
-                     <row align="center"><label value="Attribute Names Size"/><textbox id="sdb_domain_metadata_attribute_names_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_attribute_names_size_bytes_units" value="bytes"/></row>
-                     <row align="center"><label value="Attribute Value Count"/><textbox id="sdb_domain_metadata_attribute_value_count" hidespinbuttons="true" readonly="true" type="number"/><spacer/></row>
-                     <row align="center"><label value="Attribute Values Size"/><textbox id="sdb_domain_metadata_attribute_values_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_attribute_values_size_bytes_units" value="bytes"/></row>
-                     <row><spacer/><checkbox id="sdb_domain_metadata_show_bytes_in_gb" oncommand="SdbizoController.execute('loadDomainMetadata');" label="show bytes in GB"/><spacer/></row>
-                     <row><spacer/></row>            
-                     <row align="center"><label value="Metadata Last Updated at"/><textbox id="sdb_domain_metadata_updated_at" readonly="true"/><spacer/></row>
-                   </rows>
-                 </grid>
-                 <separator/>
-                 <hbox><spacer flex="1" /><button id="sdb_domains_load_metadata_button" label="Load Domain Metadata" oncommand="SdbizoController.execute('loadDomainMetadata');"/></hbox>
-               </groupbox>    
-       
-
-               <groupbox>
-                 <caption>
-                   <label value="Preferences" style="font-weight:bold;"/>
-                 </caption>
-                 <grid>
-                   <columns>
-                     <column/>
-                     <column/>
-                   </columns>
-                   <rows >
-                     <row><label value="AWS Access Key"/><textbox id="sdb_pref_access_key" emptytext="[Aws Access Key]" onkeypress="enableSaveButton();"/></row>
-                     <row><label value="AWS Secret Key"/><textbox id="sdb_pref_secret_key" emptytext="" onkeypress="enableSaveButton();" type="password"/></row>
-                     <row><spacer/><hbox align="center"><checkbox id="sdb_pref_show_domain_delete" label="Enable Domain Deletion" oncommand="toggleDeleteButton();"/><spacer flex="1"/></hbox></row>
-                   </rows>
-                 </grid>
-                 <separator/>
-                 <hbox aligh="left"><spacer flex="1"/><button id="sdb_pref_save_button" label="Save" oncommand="savePrefs();" disabled="true"/></hbox>
-               </groupbox>
-
-                <groupbox>
-                 <caption>
-                   <label value="Log" style="font-weight:bold;"/>
-                 </caption>
-                 <splitter id="sdb_log_splitter" style="background-color:#DDD; border:1px #CCC solid;" collapse="after" state="collapsed" persist="state">
-                   <grippy id="sdb_log_grippy"/>
-                 </splitter>
-                 <textbox  multiline="true" readonly="true" id="sdb_log" rows="10" style="overflow:auto"/>
-               </groupbox>      
-             </vbox>    
-        
-          </hbox> 
-      
-        </vbox>
-  
-    
+          <spacer flex="1"/>
       </hbox> 
     </vbox>
   

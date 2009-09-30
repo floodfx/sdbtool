@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://sdbizo/locale/sdbizo.dtd">
+
+<!-- 
+
+  Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+   
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
+  file except in compliance with the License. You may obtain a copy of the License at 
+  
+  http://www.apache.org/licenses/LICENSE-2.0 
+  
+  Unless required by applicable law or agreed to in writing, software distributed under 
+  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+  ANY KIND, either express or implied. See the License for the specific language governing 
+  permissions and limitations under the License.
+
+ -->
+
+<dialog id="sdbizo_about" title="Domain Metadata"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"        
+        onload="window.sizeToContent();onLoad();" buttons="accept" buttonlabelaccept="OK"
+        ondialogaccept="return true">
+        
+<script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />       
+<script><![CDATA[
+  function onLoad() {   
+    if("arguments" in window && window.arguments.length > 0) {
+      domainMetadata = window.arguments[0].domainMetadata;
+      domain = window.arguments[0].domain
+      $('#sdb_domain_metadata_domain').val(domain);
+      $('#sdb_domain_metadata_item_count').val(domainMetadata.item_count);
+      $('#sdb_domain_metadata_item_names_size_bytes').val(domainMetadata.item_names_size_bytes);
+      $('#sdb_domain_metadata_item_names_size_bytes_units').val("bytes");
+      $('#sdb_domain_metadata_attribute_name_count').value = domainMetadata.attribute_name_count;
+      $('#sdb_domain_metadata_attribute_names_size_bytes').val(domainMetadata.attribute_names_size_bytes);
+      $('#sdb_domain_metadata_attribute_names_size_bytes_units').val("bytes");
+      $('#sdb_domain_metadata_attribute_value_count').value = domainMetadata.attribute_value_count;
+      $('#sdb_domain_metadata_attribute_values_size_bytes').val(domainMetadata.attribute_values_size_bytes);
+      $('#sdb_domain_metadata_attribute_values_size_bytes_units').val("bytes");
+      var date = new Date();
+      date.setTime(domainMetadata.timestamp*1000); // add extra digits
+      var p = function(input) {
+        if(input < 10) {
+          return "0"+input;
+        }
+        return input;
+      }
+      var pretty_date = date.getUTCFullYear()+"-"+p((date.getUTCMonth()+1))+"-"+p(date.getUTCDate())+" "+p(date.getUTCHours())+":"+p(date.getUTCMinutes())+":"+p(date.getUTCSeconds())+" UTC";
+      $('#sdb_domain_metadata_updated_at').val(pretty_date);        
+    }
+  }
+]]></script>
+                  
+                
+  <dialogheader id="sdbizo_meta_header" title="Domain Metadata"/>  
+  
+  <groupbox>
+     <grid>
+       <columns>
+         <column/>
+         <column/>
+       </columns>
+       <rows>
+         <row align="center"><label value="Domain"/><textbox id="sdb_domain_metadata_domain" hidespinbuttons="true" readonly="true"/><spacer width="50px"/></row>        
+         <row align="center"><label value="Item Count"/><textbox id="sdb_domain_metadata_item_count" hidespinbuttons="true" readonly="true" type="number"/><spacer width="50px"/></row>
+         <row align="center"><label value="Item Names Size"/><textbox id="sdb_domain_metadata_item_names_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_item_names_size_bytes_units" value="bytes"/></row>
+         <row align="center"><label value="Attribute Name Count"/><textbox id="sdb_domain_metadata_attribute_name_count" hidespinbuttons="true" readonly="true" type="number"/><spacer/></row>
+         <row align="center"><label value="Attribute Names Size"/><textbox id="sdb_domain_metadata_attribute_names_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_attribute_names_size_bytes_units" value="bytes"/></row>
+         <row align="center"><label value="Attribute Value Count"/><textbox id="sdb_domain_metadata_attribute_value_count" hidespinbuttons="true" readonly="true" type="number"/><spacer/></row>
+         <row align="center"><label value="Attribute Values Size"/><textbox id="sdb_domain_metadata_attribute_values_size_bytes" decimalplaces="Infinity" hidespinbuttons="true" readonly="true" type="number"/><label id="sdb_domain_metadata_attribute_values_size_bytes_units" value="bytes"/></row>
+         <!-- <row><spacer/><checkbox id="sdb_domain_metadata_show_bytes_in_gb" oncommand="SdbizoController.execute('loadDomainMetadata');" label="show bytes in GB"/><spacer/></row> -->
+         <row><spacer/></row>            
+         <row align="center"><label value="Metadata Last Updated at"/><textbox id="sdb_domain_metadata_updated_at" readonly="true"/><spacer/></row>
+       </rows>
+     </grid>
+   </groupbox>      
+        
+</dialog>
+
