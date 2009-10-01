@@ -166,7 +166,7 @@
               </tree>
               <hbox>
                 <spacer flex="1" />
-                <button id="sdb_results_next_button" label="Next Results" oncommand="SdbizoController.execute('queryDomain');" disabled="true"/>
+                <button id="sdb_results_next_button" label="Next Results" oncommand="SdbizoController.execute('runSelect');" disabled="true"/>
               </hbox>
               
             </groupbox>

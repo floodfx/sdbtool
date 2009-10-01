@@ -27,7 +27,7 @@
                 
   <dialogheader id="sdbizo_about_header" title="About SDB Tool"/>  
   
-  <browser type="content" src="http://com-bizo-public.s3.amazonaws.com/tools/sdbizo/sdbizo_about.html" flex="100%" width="300px" height="300px"/>
+  <browser type="content" src="http://com-bizo-public.s3.amazonaws.com/tools/sdbizo/20090929/sdbizo_about.html" flex="100%" width="300px" height="300px"/>
         
 </dialog>
 
