@@ -97,7 +97,7 @@
                 </popup>
               </popupset>
             
-              <tree id="sdb_domain_tree" height="200px" onselect="domainSelected();">
+              <tree id="sdb_domain_tree" height="200px">
                 <treecols>
                   <treecol id="sdb_domain_col" label="Domains" sortDirection="ascending" flex="1"
                       persist="width ordinal hidden sortDirection" hidecolumnpicker="true"/>

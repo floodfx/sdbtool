@@ -93,23 +93,13 @@ var ensureDomainSelected = function(cur_index, error_msg) {
   return cur_index;
 }
 
-var domainSelected = function(element) {  
-  var selection = document.getElementById('sdb_domain_tree').currentIndex;
-  if(selection == -1) return;
-  $('.domainList').val(domains_tree_view.domains[selection]);
-}
-
 var resetPrefs = function() {
   sdbizo = new Sdbizo();
   sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key);
+  $('#sdb_domains_delete_button').attr('disabled', !sdbizo.show_delete_domain_button);
+  $('#sdb_domains_contextmenu_delete').attr('disabled', !sdbizo.show_delete_domain_button);
   return true;
 }
-
-var toggleDeleteButton = function() {
-  $('#sdb_domains_delete_button').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length != 1);
-  $('#sdb_domains_contextmenu_delete').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length != 1);
-}
-
 
 var sdbizoLoad = function() {
   $('#sdb_pref_access_key').val(sdbizo.aws_access_key);

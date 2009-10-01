@@ -63,7 +63,7 @@
         <rows >
           <row><label value="AWS Access Key"/><textbox id="sdb_pref_access_key" emptytext="[Aws Access Key]" onkeypress="enableSaveButton();"/></row>
           <row><label value="AWS Secret Key"/><textbox id="sdb_pref_secret_key" emptytext="" onkeypress="enableSaveButton();" type="password"/></row>
-          <row><spacer/><hbox align="center"><checkbox id="sdb_pref_show_domain_delete" label="Enable Domain Deletion" oncommand="toggleDeleteButton();"/><spacer flex="1"/></hbox></row>
+          <row><spacer/><hbox align="center"><checkbox id="sdb_pref_show_domain_delete" label="Enable Domain Deletion"/><spacer flex="1"/></hbox></row>
         </rows>
       </grid>
     </groupbox>
