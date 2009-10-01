@@ -232,7 +232,7 @@ var runSelect = new SdbizoAction('runSelect', function() {
       if(results.error) { handleError(this.action, results); return;}
 
       // select correct domain for add/update attrs
-      var find_domain = new RegExp("\\\s+from\\\s+([A-Za-z0-9_.-]+)\\\s*");
+      var find_domain = new RegExp("\\\s+from\\\s+`{0,1}([A-Za-z0-9_.-]+)`{0,1}\\\s*");
       var found_domain = find_domain.exec(expr)[1];
       for(var i = 0; i < domains_tree_view.domains.length;i++) {
         if(domains_tree_view.domains[i] == found_domain) {
