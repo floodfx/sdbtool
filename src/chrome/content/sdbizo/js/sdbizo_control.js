@@ -33,6 +33,8 @@ var SdbizoController = {
     if(action == null) {this.onException('action', 'UnknownAction');return;}
     // execute the action
     try {
+      // hide error msg 
+      $('#sdb_error_flash').attr('hidden', true);      
       action.execute();
     }catch(ex) {this.onException(action_name, ex);}
   }
@@ -312,11 +314,11 @@ var putAttributes = new SdbizoAction('putAttributes', function() {
 
 var getAttributesPrompt = new SdbizoAction('getAttributesPrompt', function() {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_query_domain').selectedIndex;
+  var cur_index = document.getElementById('sdb_put_attribute_domain').selectedIndex;
   var selection = ensureDomainSelected(cur_index, "Please select a domain first");
   if(selection < 0) return;
   
-  var domain_name = document.getElementById('sdb_query_domain').selectedItem.value;    
+  var domain_name = document.getElementById('sdb_put_attribute_domain').selectedItem.value;    
   
   if(!selected_item) {prompts.alert(window, "Warning", "You must select an item."); return;} 
   
@@ -423,11 +425,11 @@ var showAbout = new SdbizoAction('showAbout', function()  {
 
 var deleteItemPrompt = new SdbizoAction('deleteItemPrompt', function()  {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_query_domain').selectedIndex;
+  var cur_index = document.getElementById('sdb_put_attribute_domain').selectedIndex;
   var selection = ensureDomainSelected(cur_index, "Please select a domain first");
   if(selection < 0) return;
   
-  var domain_name = document.getElementById('sdb_query_domain').selectedItem.value; 
+  var domain_name = document.getElementById('sdb_put_attribute_domain').selectedItem.value; 
   
   if(!selected_item) {prompts.alert(window, "Warning", "You must select an item."); return;} 
   
@@ -441,11 +443,11 @@ var deleteItemPrompt = new SdbizoAction('deleteItemPrompt', function()  {
 
 var deleteAttributePrompt = new SdbizoAction('deleteAttributePrompt', function()  {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_query_domain').selectedIndex;
+  var cur_index = document.getElementById('sdb_put_attribute_domain').selectedIndex;
   var selection = ensureDomainSelected(cur_index, "Please select a domain first");
   if(selection < 0) return;
   
-  var domain_name = document.getElementById('sdb_query_domain').selectedItem.value; 
+  var domain_name = document.getElementById('sdb_put_attribute_domain').selectedItem.value;
   
   if(!selected_item) {prompts.alert(window, "Warning", "You must select an item."); return;} 
   
@@ -460,11 +462,11 @@ var deleteAttributePrompt = new SdbizoAction('deleteAttributePrompt', function()
 
 var deleteAttributeValuePrompt = new SdbizoAction('deleteAttributeValuePrompt', function()  {
   var action = this.action; 
-  var cur_index = document.getElementById('sdb_query_domain').selectedIndex;
+  var cur_index = document.getElementById('sdb_put_attribute_domain').selectedIndex;
   var selection = ensureDomainSelected(cur_index, "Please select a domain first");
   if(selection < 0) return;
   
-  var domain_name = document.getElementById('sdb_query_domain').selectedItem.value; 
+  var domain_name = document.getElementById('sdb_put_attribute_domain').selectedItem.value;
   
   if(!selected_item) {prompts.alert(window, "Warning", "You must select an item."); return;} 
   

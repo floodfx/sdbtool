@@ -25,6 +25,8 @@
   resizeable="true" scrollbars="true"
   hidechrome="false"
   onload="sdbizoLoad();">
+  
+  <html:link rel="icon" href="http://www.bizo.com/favicon.ico"/>  
 
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/sha1.js" />
@@ -47,6 +49,7 @@
        <label style="font-size:20px">Simple DB Tool</label>
        <button label="About" oncommand="SdbizoController.execute('showAbout');"/>
        <button label="Config" oncommand="SdbizoController.execute('showPrefs');"/>
+       <label href="http://code.google.com/p/sdbtool/issues/list" value="Report an Issue" class="text-link"/>
      </hbox>
   
      <!-- main body -->

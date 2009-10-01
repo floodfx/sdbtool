@@ -27,7 +27,19 @@
                 
   <dialogheader id="sdbizo_about_header" title="About SDB Tool"/>  
   
-  <browser type="content" src="http://com-bizo-public.s3.amazonaws.com/tools/sdbizo/20090929/sdbizo_about.html" flex="100%" width="300px" height="300px"/>
+  <vbox style="font-size:12px; padding: 10px;">
+  
+  
+  <hbox><spacer flex="1"/><image align="center" width="75" height="37" class="loader" id="sdb_loader" src="images/logo_small.gif" /><spacer flex="1"/></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Simple DB Tool developed by  <label value="Bizo, Inc" href="http://www.bizo.com" class="text-link "/></vbox></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Project <label value="hosted at" href="http://code.google.com/p/sdbtool" class="text-link "/>  Google Code.</vbox></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Code <label value="hosted at" href="https://github.com/floodfx/sdbtool" class="text-link "/>  GitHub.</vbox></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Big thanks to <label value="jQuery" href="http://jquery.com" class="text-link"/> and <label value="Paul Johnson et al" href="http://pajhome.org.uk/crypt/md5" class="text-link plain"/>.</vbox></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Finally, thank you <label value="AWS Team" href="http://aws.amazon.com" class="text-link"/>!</vbox></hbox>
+  <hbox height="40px" pack="end"><vbox pack="center">  -<label value="Bizo Dev Team" href="http://dev.bizo.com" class="text-link  "/></vbox></hbox>
+  <hbox height="40px" pack="start"><vbox pack="center">P.S. - <label href="mailto:sdbtool@bizo.com" value="Email us" class="text-link "/>  and check out our  <label href="http://bizo-dev.blogspot.com" class="text-link " value="blog"/></vbox></hbox>
+  <hbox  height="80px" pack="end"><vbox pack="center">Version: <label value="2009-09-29" style="font-weight:bold"/></vbox></hbox>  
+  </vbox>  
         
 </dialog>
 
