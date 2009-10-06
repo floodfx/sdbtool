@@ -1,11 +1,8 @@
 Mozilla Firefox extension for interacting with Amazon Simple DB (SDB). Includes
 a javascript implementation of the SDB API along with an XUL UI.
 
-Version:
-2008.12.15.0.1011
-
 Installation:
-Point your Firefox 3.0+ browser to: http://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.xpi
+Point your Firefox browser to: http://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.xpi
 
 Source Code:
 Project managed at Google Code: http://code.google.com/p/sdbtool
