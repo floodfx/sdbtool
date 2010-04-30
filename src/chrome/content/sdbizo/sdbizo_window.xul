@@ -5,7 +5,7 @@
 
 <!-- 
  
- Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+ Copyright 2010 Bizo, Inc (Donnie Flood [donnie@bizo.com])
   
  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
  file except in compliance with the License. You may obtain a copy of the License at 
@@ -36,7 +36,7 @@
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/sdbizo_prefs.js" />
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/sdbizo_control.js" />
  
-  <hbox style="overflow:auto;" align="start" flex="1">
+  <hbox style="overflow:auto;" align="center" flex="1">
  
    <vbox  align="stretch" flex="1" style="border:1px solid #999; margin-bottom:10px;padding-top:10px;">
 
@@ -81,11 +81,11 @@
              <hbox aligh="left"><spacer flex="1"/><button label="Run Select" oncommand="SdbizoController.execute('runSelect');"/></hbox>
 
            </groupbox>
-      
+                      
             <groupbox>
               <caption>
                 <hbox id="sdb_domains_label_and_loader">
-                  <label value="Domains" style="font-weight:bold;"/>
+                  <label value="Domains" style="font-weight:bold;"/>                  
                 </hbox>
               </caption>
           
@@ -120,6 +120,22 @@
               </hbox>
           
             </groupbox>
+            
+            <groupbox>
+               <caption>
+                 <hbox id="sdb_region_label_and_loader">
+                   <label value="Region" style="font-weight:bold;"/>                  
+                 </hbox>
+               </caption>
+               <menulist class="regionList" id="sdb_region_list" label="[Select Region]" oncommand="SdbizoController.execute('changeSelectedRegion');">
+                 <menupopup>
+                   <menuitem label="US East 1 (Northern Virgina)" value="us-east-1"/>
+                   <menuitem label="US West 1 (Northern California)" value="us-west-1"/>
+                   <menuitem label="EU West 1 (Ireland)" value="eu-west-1"/>
+                   <menuitem label="Asia Pacific Southeast 1 (Singapore)" value="ap-southeast-1"/>
+                 </menupopup>
+               </menulist>
+             </groupbox>
       
             <groupbox>
               <caption>
@@ -136,7 +152,7 @@
 
 
           <!-- middle column -->
-          <vbox id="sdb_results_box" flex="10" >
+          <vbox id="sdb_results_box" flex="10" width="500px">
             <groupbox>
               <caption>
                 <hbox id="sdb_results_label_and_loader">
@@ -168,6 +184,7 @@
                 <treechildren id="sdb_results_tree_children" context="sdb_results_contextmenu" />
               </tree>
               <hbox>
+                <button id="sdb_results_expand_button" label="Expand Results" oncommand="SdbizoController.execute('expandAll');" disabled="true"/>
                 <spacer flex="1" />
                 <button id="sdb_results_next_button" label="Next Results" oncommand="SdbizoController.execute('runSelect');" disabled="true"/>
               </hbox>
