@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+ * Copyright 2010 Bizo, Inc (Donnie Flood [donnie@bizo.com])
  *  
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
  * file except in compliance with the License. You may obtain a copy of the License at 
@@ -38,6 +38,22 @@ var SdbizoController = {
       action.execute();
     }catch(ex) {this.onException(action_name, ex);}
   }
+}
+
+var sdbizo_region_to_url = function(region) {
+  if(region == 'us-west-1') return 'sdb.us-west-1.amazonaws.com';
+  if(region == 'eu-west-1') return 'sdb.eu-west-1.amazonaws.com';
+  if(region == 'ap-southeast-1') return 'sdb.ap-southeast-1.amazonaws.com';
+  // else default to east
+  return 'sdb.amazonaws.com';
+}
+
+var sdbizo_region_to_index = function(region) {
+  if(region == 'us-west-1') return 1;
+  if(region == 'eu-west-1') return 2;
+  if(region == 'ap-southeast-1') return 3;
+  // else default to east
+  return 0;
 }
 
 var sdbizo_log = function(msg) {
@@ -95,7 +111,7 @@ var ensureDomainSelected = function(cur_index, error_msg) {
 
 var resetPrefs = function() {
   sdbizo = new Sdbizo();
-  sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key);
+  sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key, sdbizo_region_to_url(sdbizo.aws_region));
   $('#sdb_domains_delete_button').attr('disabled', !sdbizo.show_delete_domain_button);
   $('#sdb_domains_contextmenu_delete').attr('disabled', !sdbizo.show_delete_domain_button);
   return true;
@@ -103,14 +119,15 @@ var resetPrefs = function() {
 
 var sdbizoLoad = function() {
   $('#sdb_pref_access_key').val(sdbizo.aws_access_key);
-  $('#sdb_pref_secret_key').val(sdbizo.aws_secret_key);
+  $('#sdb_pref_secret_key').val(sdbizo.aws_secret_key);  
+  document.getElementById('sdb_region_list').selectedIndex = sdbizo_region_to_index(sdbizo.aws_region);
   $('#sdb_pref_show_domain_delete').attr('checked', sdbizo.show_delete_domain_button);
   $('#sdb_domains_delete_button').attr('disabled', !sdbizo.show_delete_domain_button);
   $('#sdb_domains_contextmenu_delete').attr('disabled', !sdbizo.show_delete_domain_button);
   document.getElementById('sdb_domain_tree').view = domains_tree_view;
   document.getElementById('sdb_results_tree').view = results_tree_view;
   
-  sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key);
+  sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key, sdbizo_region_to_url(sdbizo.aws_region));
   if(sdbizo.aws_access_key == '' || sdbizo.aws_secret_key == '') return;
   SdbizoController.execute('reloadDomains');
 }
@@ -123,6 +140,21 @@ function SdbizoAction(action, execute) {
   this.action       = action;
   this.execute      = execute;
 }
+
+var changeSelectedRegion = new SdbizoAction('changeSelectedRegion', function() {
+  var action = this.action; 
+  var region_name = document.getElementById('sdb_region_list').selectedItem.value;
+  sdbizo_log("region_name:"+region_name);
+  if(sdbizo.aws_region != region_name) {
+    try {
+      sdbizo.aws_region = region_name;
+      sdbizo.savePrefs();
+      sdb = new SDB(sdbizo.aws_access_key, sdbizo.aws_secret_key, sdbizo_region_to_url(sdbizo.aws_region));
+      SdbizoController.execute('reloadDomains');
+    }
+    catch(ex) {handleException(this.action, ex);}
+  }
+});
 
 var reloadDomains = new SdbizoAction('reloadDomains', function() {
   var action = this.action; 
@@ -235,6 +267,7 @@ var runSelect = new SdbizoAction('runSelect', function() {
       results_tree_view.setResults(itemsToResults(found_domain, results));
       query_next = results.next_token;
       $('#sdb_results_next_button').attr('disabled', query_next.length == 0);
+      $('#sdb_results_expand_button').attr('disabled', results.length == 0);      
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
@@ -278,12 +311,21 @@ var putAttributes = new SdbizoAction('putAttributes', function() {
       if(pa_item != null && pa_item.name == item_name) { // might be new item
         for(var i = 0; i < pa_item.children.length; i++) {
           var child = pa_item.children[i];
-          if(child.name != name) {
-            item.attrs[child.name] = []; // reload              
-          } else {continue;}
-          for(var j = 0; j < child.children.length; j++) {
-            var val = child.children[j];
-            item.attrs[child.name].push(val.name);
+          if(child.name != name) {        
+            item.attrs[child.name] = [];
+            for(var j = 0; j < child.children.length; j++) {
+              var val = child.children[j];
+              item.attrs[child.name].push(val.name);      
+            }
+          } else {
+            if(!replace) {              
+              for(var j = 0; j < child.children.length; j++) {
+                var val = child.children[j];
+                if($.inArray(val.name, item.attrs[child.name]) == -1) {// could already be there
+                  item.attrs[child.name].push(val.name);
+                }
+              }
+            }
           }
         }          
       }
@@ -494,6 +536,10 @@ var deleteAttributes = function(domain_name, item_name, attributes) {
   });  
 }
 
+var expandAll = new SdbizoAction('expandAll', function()  {
+  results_tree_view.expandAll();
+});
+
 var showPrefs = new SdbizoAction('showPrefs', function()  {
   window.openDialog("chrome://sdbizo/content/sdbizo_prefs.xul", "sdbizo_prefs", "chrome", resetPrefs);
 });
@@ -512,3 +558,5 @@ SdbizoController.addAction(deleteAttributeValuePrompt);
 SdbizoController.addAction(putAttributes);
 SdbizoController.addAction(showAbout);
 SdbizoController.addAction(showPrefs);
+SdbizoController.addAction(changeSelectedRegion);
+SdbizoController.addAction(expandAll);
