@@ -73,7 +73,7 @@ var unlock_ui = function() {
   $('.loader').attr('hidden', true);
   $('button').attr('disabled', false);
   // keep the same state for some buttons
-  $('#sdb_domains_delete_button').attr('disabled', $('#sdb_pref_show_domain_delete:checked').length == 0);
+  $('#sdb_domains_delete_button').attr('disabled', !sdbizo.show_delete_domain_button);
   $('#sdb_results_next_button').attr('disabled', query_next == null || query_next.length == 0);
 }
 
