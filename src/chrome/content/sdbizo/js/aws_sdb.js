@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+ * Copyright 2010 Bizo, Inc (Donnie Flood [donnie@bizo.com])
  *  
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
  * file except in compliance with the License. You may obtain a copy of the License at 
@@ -23,12 +23,13 @@
  * and related js code (sha1.js)
  * 
  */
-function SDB(access_key, secret_key, version) {
+function SDB(access_key, secret_key, endpoint, version) {
 
   /****  PRIVATE VARIABLES ****/
   var aws_access_key = access_key;
   var aws_secret_key = secret_key;
-  var sdb_base_url = "http://sdb.amazonaws.com";
+  var aws_endpoint = isEmpty(endpoint) ? "sdb.amazonaws.com" : endpoint;
+  var sdb_base_url = "http://"+aws_endpoint;
   var sdb_version = isEmpty(version) ? "2009-04-15" : version;
   
   /****  PRIVATE FUNCTIONS ****/
