@@ -229,10 +229,10 @@ var results_tree_view = {
     return index;
   },
   
-  removeItem : function(item, type, index) {
+  removeItem : function(item_name, type, index) {
     var item_index = index;
-    if(index == -1 || index == 0) { // don't trust 0
-      item_index = this.findItemIndex(item.name);
+    if(index == -1 || index == 0) { // don't trust 0    
+      item_index = this.findItemIndex(item_name, type);
       if(item_index == -1) return;
     }
     // close item at index then delete
