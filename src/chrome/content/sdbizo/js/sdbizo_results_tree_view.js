@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Bizo, Inc (Donnie Flood [donnie@bizo.com])
+ * Copyright 2010 Bizo, Inc (Donnie Flood [donnie@bizo.com])
  *  
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this 
  * file except in compliance with the License. You may obtain a copy of the License at 
@@ -47,6 +47,8 @@ function Result(domain, name, children, isExpanded, isVisible) {
     return ResultType.ATTR_KEY;
   }
 }
+
+var nameSorter = function(a,b){if(a.name < b.name) return -1;if(a.name > b.name)return 1; return 0;}
 
 var itemsToResults = function(domain, results) {
   var new_items = [];
@@ -131,10 +133,17 @@ var results_tree_view = {
       var thisLevel = this.getLevel(idx);
       var deletecount = 0;
       for (var t = idx + 1; t < this.visibleData.length; t++) {
-        if (this.getLevel(t) > thisLevel) deletecount++;
-        else break;
+        if (this.getLevel(t) > thisLevel) {
+          deletecount++;
+        }
+        else {
+          break;
+        }
       }
       if (deletecount) {
+        for(var i = idx+1; i < idx + deletecount;i++) {
+          this.visibleData[i].isExpanded = false;
+        }
         this.visibleData.splice(idx + 1, deletecount);
         this.treeBox.rowCountChanged(idx + 1, -deletecount);
       }
@@ -164,6 +173,17 @@ var results_tree_view = {
       }
     }
   },
+  
+  expandAll: function() {
+    var current_index = 0;
+    while(current_index < this.visibleData.length) {
+      var item = this.visibleData[current_index];
+      if(!item.isExpanded) {
+        this.toggleOpenState(current_index);
+      }
+      current_index++;
+    }
+  },
 
   getImageSrc: function(idx, column) {},
   getProgressMode : function(idx,column) {},
@@ -179,7 +199,18 @@ var results_tree_view = {
   
   // write entire tree
   setResults : function(results) {
-    this.treeBox.rowCountChanged(0, -this.visibleData.length);
+    this.treeBox.rowCountChanged(0, -this.visibleData.length);    
+    
+    // sort item attributes / values
+    for(var i = 0; i < results.length; i++) {
+      var item = results[i];
+      for(var j = 0; j < item.children.length; j++) {
+        var attr = item.children[j];
+        attr.children = attr.children.sort(nameSorter);
+      }
+      item.children = item.children.sort(nameSorter);
+    }
+    
     this.visibleData = results;
     this.treeBox.rowCountChanged(0, this.visibleData.length);      
   },
@@ -233,6 +264,13 @@ var results_tree_view = {
     // close item at index then delete
     var cur_item = this.visibleData[item_index];
     if(cur_item.isExpanded) this.toggleOpenState(item_index);
+    // sort item attributes
+    for(var j = 0; j < item.children.length; j++) {
+      var attr = item.children[j];
+      attr.children = attr.children.sort(nameSorter);
+    }
+    item.children = item.children.sort(nameSorter);
+    
     // overwrite
     this.treeBox.rowCountChanged(item_index, -1);
     this.visibleData[item_index] = item;     
@@ -244,7 +282,14 @@ var results_tree_view = {
   // insert item at the top
   addItem : function(item) {        
     
-    this.visibleData.splice(0, 0, item)        
+    // sort item attributes
+    for(var j = 0; j < item.children.length; j++) {
+      var attr = item.children[j];
+      attr.children = attr.children.sort(nameSorter);
+    }
+    item.children = item.children.sort(nameSorter);
+    
+    this.visibleData.splice(0, 0, item);
     this.treeBox.rowCountChanged(0, 1);  
     
     // auto expand names
