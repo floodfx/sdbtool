@@ -38,7 +38,7 @@
   <hbox height="40px" pack="center"><vbox pack="center">Finally, thank you <label value="AWS Team" href="http://aws.amazon.com" class="text-link"/>!</vbox></hbox>
   <hbox height="40px" pack="end"><vbox pack="center">  -<label value="Bizo Dev Team" href="http://dev.bizo.com" class="text-link  "/></vbox></hbox>
   <hbox height="40px" pack="start"><vbox pack="center">P.S. - <label href="mailto:sdbtool@bizo.com" value="Email us" class="text-link "/>  and check out our  <label href="http://dev.bizo.com" class="text-link " value="blog"/></vbox></hbox>
-  <hbox  height="80px" pack="end"><vbox pack="center">Version: <label value="2009-09-29" style="font-weight:bold"/></vbox></hbox>  
+  <hbox  height="80px" pack="end"><vbox pack="center">Version: <label value="2010-04-29" style="font-weight:bold"/></vbox></hbox>  
   </vbox>  
         
 </dialog>
