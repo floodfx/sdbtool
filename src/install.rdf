@@ -24,7 +24,7 @@
     <em:description>Mozilla Firefox extension for interacting with Amazon Simple DB (SDB).</em:description>
     <em:creator>Donnie Flood at Bizo, Inc (http://www.bizo.com)</em:creator>
     <em:homepageURL>http://www.bizo.com</em:homepageURL>
-    <em:updateURL>https://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.xpi</em:updateURL>
+    <em:updateURL>https://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.rdf</em:updateURL>
   </Description>
 
   <Description about="urn:mozilla:extension:file:sdbizo.jar"
