@@ -30,7 +30,7 @@ else
     export SED_ARGS="-i"
 fi
 
-export PKG_VERSION=2010.04.29
+export PKG_VERSION=2010.05.03
 export PKG_RELEASE=$(get_pkg_release)
 export PKG_NAME=sdbizo
 export BASE=$PKG_NAME-$PKG_VERSION.$PKG_RELEASE
