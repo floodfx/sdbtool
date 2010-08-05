@@ -69,8 +69,14 @@ function SDB(access_key, secret_key, endpoint, version) {
   /** 
    * Processes request metadata elements into the result
    */
-  function parseMetadata(data, text_status) {
-    var result = {meta:{req_id:$("RequestId", data).text(),box_usage:parseFloat($("BoxUsage", data).text())}};
+  function parseMetadata(data, text_status, req_url) {
+    var result = {meta:
+                       {req_id:$("RequestId", data).text(),
+                        box_usage:parseFloat($("BoxUsage", data).text()),
+                        status:text_status,
+                        req_url:req_url
+                        }
+                  };
     return result;
   }  
   
@@ -89,10 +95,10 @@ function SDB(access_key, secret_key, endpoint, version) {
     // use jquery to make request
     $.ajax({type:type, url:url, 
       success:function(data, text_status) {
-        callback(parseMetadata(data, text_status), data);
+        callback(parseMetadata(data, text_status, url), data);
       },
       error:function(xhr, text_status, error) {     
-        var result = parseMetadata(xhr.responseXML, text_status);              
+        var result = parseMetadata(xhr.responseXML, text_status, url);              
         result.error = {msg:$("Message", xhr.responseXML).text(),code:$("Code", xhr.responseXML).text()}
         error_callback(result, xhr.responseXML); 
       },

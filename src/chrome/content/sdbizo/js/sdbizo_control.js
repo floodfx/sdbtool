@@ -69,12 +69,22 @@ var lock_ui = function() {
   $('button').attr('disabled', true);
 }
 
-var unlock_ui = function() {
+var unlock_ui = function(results) {
   $('.loader').attr('hidden', true);
   $('button').attr('disabled', false);
   // keep the same state for some buttons
   $('#sdb_domains_delete_button').attr('disabled', !sdbizo.show_delete_domain_button);
   $('#sdb_results_next_button').attr('disabled', query_next == null || query_next.length == 0);
+  
+  try {
+    // log success text and raw url
+    sdbizo_log("Status:["+results.meta.status+"]");
+    sdbizo_log("Box Usage:["+results.meta.box_usage+"]");
+    sdbizo_log("Raw Url:["+results.meta.req_url+"]");
+  }
+  catch(e) {
+   sdbizo_log(e) 
+  }
 }
 
 
@@ -171,7 +181,7 @@ var reloadDomains = new SdbizoAction('reloadDomains', function() {
     }
     catch(ex) {handleException(action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }
   });  
   
@@ -196,7 +206,7 @@ var createDomain = new SdbizoAction('createDomain', function() {
     } 
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
       $('#sdb_create_domain_input').val(''); //clear textbox      
     }    
   });
@@ -213,7 +223,7 @@ var deleteDomain = function(domain_name) {
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }    
   });
 }
@@ -271,7 +281,7 @@ var runSelect = new SdbizoAction('runSelect', function() {
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }  
   }, query_next);
   
@@ -339,7 +349,7 @@ var putAttributes = new SdbizoAction('putAttributes', function() {
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }  
   });
 });
@@ -371,7 +381,7 @@ var getAttributes = function(domain_name, item_name, names) {
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }  
   });  
 }
@@ -397,7 +407,7 @@ var loadDomainMetadata = new SdbizoAction('loadDomainMetadata', function() {
       }
       catch(ex) {handleException(this.action, ex);}
       finally {
-        unlock_ui();
+        unlock_ui(results);
       }  
     });
   }      
@@ -531,7 +541,7 @@ var deleteAttributes = function(domain_name, item_name, attributes) {
     }
     catch(ex) {handleException(this.action, ex);}
     finally {
-      unlock_ui();
+      unlock_ui(results);
     }  
   });  
 }
