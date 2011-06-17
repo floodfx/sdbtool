@@ -12,7 +12,7 @@
             <r:Description>
               <id>{sdbizo@bizo.com}</id>
               <minVersion>1.5</minVersion>
-              <maxVersion>3.6.*</maxVersion>
+              <maxVersion>4.0.*</maxVersion>
               <updateLink>https://s3.amazonaws.com/com-bizo-public/tools/sdbizo/sdbizo.xpi</updateLink>
             </r:Description>
           </targetApplication>
