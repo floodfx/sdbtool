@@ -17,7 +17,7 @@ function Sdbizo() {
   
   this.aws_access_key = '';
   this.aws_secret_key = '';
-  this.aws_region = 'us-east-1';
+  this.aws_region = 'us-west-2';
   this.show_delete_domain_button = false;
   
   var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch );
