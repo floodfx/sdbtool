@@ -48,28 +48,26 @@ var sdbizo_region_to_url = function(region) {
   if(region == 'us-west-2') return 'sdb.us-west-2.amazonaws.com';
   if(region == 'ap-northeast-1') return 'sdb.ap-northeast-1.amazonaws.com';
   if(region == 'sa-east-1') return 'sdb.sa-east-1.amazonaws.com';
-  //add by huoqi
+  //add by huoqi. 2014.5.27
   if(region == 'us-east-1') return 'sdb.us-east-1.amazonaws.com';
   if(region == 'ap-southeast-2') return 'sdb.ap-southeast-2.amazonaws.com';
   if(region == 'cn-north-1') return 'sdb.cn-north-1.amazonaws.com';
-  if(region == 'govcloud') return 'sdb.govcloud.amazonaws.com';
+  if(region == 'govcloud') return 'sdb.us-gov-west-1.amazonaws.com';
   // else default to east
   return 'sdb.amazonaws.com';
 }
 
 var sdbizo_region_to_index = function(region) {
-  if(region == 'us-west-1') return 1;
-  if(region == 'eu-west-1') return 2;
-  if(region == 'ap-southeast-1') return 3;
-  //added byxjimmy
+  if(region == 'govcloud') return 1;
+  if(region == 'us-east-1') return 2;
+  if(region == 'us-west-1') return 3;
   if(region == 'us-west-2') return 4;
-  if(region == 'ap-northeast-1') return 5;
-  if(region == 'sa-east-1') return 6;
-  //add by huoqi
-  if(region == 'us-east-1') return 7;
-  if(region == 'ap-southeast-2') return 8;
-  if(region == 'cn-north-1') return 9;
-  if(region == 'govcloud') return 10;
+  if(region == 'eu-west-1') return 5;
+  if(region == 'ap-southeast-1') return 6;
+  if(region == 'ap-southeast-2') return 7;
+  if(region == 'ap-northeast-1') return 8;
+  if(region == 'sa-east-1') return 9;
+  if(region == 'cn-north-1') return 10;
   // else default to east
   return 0;
 }
