@@ -30,10 +30,13 @@ else
     export SED_ARGS="-i"
 fi
 
-export PKG_VERSION=2011.07.17
+export PKG_VERSION=2014.05.27
 export PKG_RELEASE=$(get_pkg_release)
 export PKG_NAME=sdbizo
 export BASE=$PKG_NAME-$PKG_VERSION.$PKG_RELEASE
+# The next 2 lines are for Mac osx
+export LC_COLLATE='C'
+export LC_CTYPE='C'
 
 echo "+ Bulding $PKG_NAME version $PKG_VERSION-$PKG_RELEASE"
 
@@ -59,7 +62,10 @@ popd > /dev/null
 # make the chrome jar
 pushd build/$BASE/chrome > /dev/null
   rm -f sdbizo.jar
-  $JAVA_HOME/bin/jar cf sdbizo.jar content locale
+ # for Linux
+ # $JAVA_HOME/bin/jar cf sdbizo.jar content locale
+ # for Mac osx
+  /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/bin/jar cf sdbizo.jar content locale
 popd > /dev/null
 
 # prepare source for bundling

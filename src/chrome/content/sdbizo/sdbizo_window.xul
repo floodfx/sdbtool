@@ -129,10 +129,16 @@
                </caption>
                <menulist class="regionList" id="sdb_region_list" label="[Select Region]" oncommand="SdbizoController.execute('changeSelectedRegion');">
                  <menupopup>
-                   <menuitem label="US East 1 (Northern Virgina)" value="us-east-1"/>
-                   <menuitem label="US West 1 (Northern California)" value="us-west-1"/>
+                   <menuitem label="GovCloud" value="govcloud"/>
+                   <menuitem label="US East 1 (Virgina)" value="us-east-1"/>
+                   <menuitem label="US West 1 (N. California)" value="us-west-1"/>
+                   <menuitem label="US West 2 (Oregon)" value="us-west-2"/>
                    <menuitem label="EU West 1 (Ireland)" value="eu-west-1"/>
                    <menuitem label="Asia Pacific Southeast 1 (Singapore)" value="ap-southeast-1"/>
+                   <menuitem label="Asia Pacific Southeast 2 (Sydney)" value="ap-southeast-2"/>
+                   <menuitem label="Asia Pacific Northeast 1 (Tokyo)" value="ap-northeast-1"/>
+                   <menuitem label="South America East 1 (Sao Paulo)" value="sa-east-1"/>
+                   <menuitem label="China North 1 (Beijing)" value="cn-north-1"/> 
                  </menupopup>
                </menulist>
              </groupbox>

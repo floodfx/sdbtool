@@ -17,7 +17,7 @@ function Sdbizo() {
   
   this.aws_access_key = '';
   this.aws_secret_key = '';
-  this.aws_region = 'us-east-1';
+  this.aws_region = 'us-west-2';
   this.show_delete_domain_button = false;
   
   var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch );
@@ -63,7 +63,7 @@ function Sdbizo() {
   //init
   this.aws_access_key = this.read_pref("sdbizo.aws_access_key", prefs.PREF_STRING, '');
   this.aws_secret_key = this.read_pref("sdbizo.aws_secret_key", prefs.PREF_STRING, '');
-  this.aws_region = this.read_pref("sdbizo.aws_region", prefs.PREF_STRING, 'us-east-1');
+  this.aws_region = this.read_pref("sdbizo.aws_region", prefs.PREF_STRING, 'us-west-2');
   this.show_delete_domain_button = this.read_pref("sdbizo.show_delete_domain_button", prefs.PREF_BOOL, false);
   
 }
