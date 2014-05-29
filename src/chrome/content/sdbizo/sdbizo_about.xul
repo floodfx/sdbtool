@@ -34,11 +34,11 @@
   <hbox height="40px" pack="center"><vbox pack="center">Simple DB Tool developed by  <label value="Bizo, Inc" href="http://www.bizo.com" class="text-link "/></vbox></hbox>
   <hbox height="40px" pack="center"><vbox pack="center">Project <label value="hosted at" href="http://code.google.com/p/sdbtool" class="text-link "/>  Google Code.</vbox></hbox>
   <hbox height="40px" pack="center"><vbox pack="center">Code <label value="hosted at" href="https://github.com/floodfx/sdbtool" class="text-link "/>  GitHub.</vbox></hbox>
-  <hbox height="40px" pack="center"><vbox pack="center">Big thanks to <label value="jQuery" href="http://jquery.com" class="text-link"/> and <label value="Paul Johnson et al" href="http://pajhome.org.uk/crypt/md5" class="text-link plain"/>.</vbox></hbox>
+  <hbox height="40px" pack="center"><vbox pack="center">Big thanks to <label value="jQuery" href="http://jquery.com" class="text-link"/> and&#160;<label value="Paul Johnson et al" href="http://pajhome.org.uk/crypt/md5" class="text-link plain"/>.</vbox></hbox>
   <hbox height="40px" pack="center"><vbox pack="center">Finally, thank you <label value="AWS Team" href="http://aws.amazon.com" class="text-link"/>!</vbox></hbox>
   <hbox height="40px" pack="end"><vbox pack="center">  -<label value="Bizo Dev Team" href="http://dev.bizo.com" class="text-link  "/></vbox></hbox>
   <hbox height="40px" pack="start"><vbox pack="center">P.S. - <label href="mailto:sdbtool@bizo.com" value="Email us" class="text-link "/>  and check out our  <label href="http://dev.bizo.com" class="text-link " value="blog"/></vbox></hbox>
-  <hbox  height="80px" pack="end"><vbox pack="center">Version: <label value="2010-05-03" style="font-weight:bold"/></vbox></hbox>  
+  <hbox  height="80px" pack="end"><vbox pack="center">Version: <label value="2014-05-27" style="font-weight:bold"/></vbox></hbox>  
   </vbox>  
         
 </dialog>
