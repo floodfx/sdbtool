@@ -49,7 +49,7 @@ var sdbizo_region_to_url = function(region) {
   if(region == 'ap-northeast-1') return 'sdb.ap-northeast-1.amazonaws.com';
   if(region == 'sa-east-1') return 'sdb.sa-east-1.amazonaws.com';
   //add by huoqi. 2014.5.27
-  if(region == 'us-east-1') return 'sdb.us-east-1.amazonaws.com';
+  if(region == 'us-east-1') return 'sdb.amazonaws.com'; //us-west-1 return sdb.amazonaws.com ref:http://docs.aws.amazon.com/general/latest/gr/rande.html#sdb_region
   if(region == 'ap-southeast-2') return 'sdb.ap-southeast-2.amazonaws.com';
   if(region == 'cn-north-1') return 'sdb.cn-north-1.amazonaws.com';
   if(region == 'govcloud') return 'sdb.us-gov-west-1.amazonaws.com';
