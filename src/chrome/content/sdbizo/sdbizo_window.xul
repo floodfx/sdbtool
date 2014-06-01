@@ -28,7 +28,7 @@
   
   <html:link rel="icon" href="http://www.bizo.com/favicon.ico"/>  
 
-  <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />
+  <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-2.1.1.min.js" />
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/sha1.js" />
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/aws_sdb.js" />
   <script type="application/x-javascript" src="chrome://sdbizo/content/js/sdbizo_domains_tree_view.js" />
