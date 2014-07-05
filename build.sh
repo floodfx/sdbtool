@@ -65,7 +65,7 @@ pushd build/$BASE/chrome > /dev/null
  # for Linux
  # $JAVA_HOME/bin/jar cf sdbizo.jar content locale
  # for Mac osx
-  /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/bin/jar cf sdbizo.jar content locale
+  /Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home/bin/jar cf sdbizo.jar content locale
 popd > /dev/null
 
 # prepare source for bundling

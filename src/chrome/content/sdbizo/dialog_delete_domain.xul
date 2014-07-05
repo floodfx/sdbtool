@@ -28,7 +28,7 @@
                 
   <dialogheader id="sdbizo_dialog_delete_domain_header" title="Really Delete Domain?" description="Are you sure you want to delete the selected domain?"/>  
   
-  <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />
+  <script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-2.1.1.min.js" />
   
   <script>
     var domain_name = window.arguments[0];

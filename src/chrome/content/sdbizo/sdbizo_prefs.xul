@@ -27,7 +27,7 @@
         buttonlabelcancel="Cancel"
         ondialogaccept="savePrefs();">
         
-<script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-1.2.6.min.js" />
+<script type="application/x-javascript" src="chrome://sdbizo/content/js/lib/jquery-2.1.1.min.js" />
 <script type="application/x-javascript" src="chrome://sdbizo/content/js/sdbizo_prefs.js" />       
 <script><![CDATA[
   var sdbizo = new Sdbizo();
