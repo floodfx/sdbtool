@@ -18,6 +18,6 @@ Thanks,
 Contact us at: sdbtool@bizo.com
 
 2014.5.27
-This version is for Mac osx 10.9+ with jdk 1.7.0_55, if you use other Linux os, please modify build.sh
-1. Delete line 38&39.
+This version is for Mac osx 10.9+ with jdk 1.7.0_60, if you use other Linux os, please modify build.sh
+1. Delete line 38 & 39.
 2. Use line 66 instead of line 68.
