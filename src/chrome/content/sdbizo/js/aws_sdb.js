@@ -31,6 +31,7 @@ function SDB(access_key, secret_key, endpoint, version) {
   var aws_endpoint = isEmpty(endpoint) ? "sdb.amazonaws.com" : endpoint;
   var sdb_base_url = "http://"+aws_endpoint;
   var sdb_version = isEmpty(version) ? "2009-04-15" : version;
+  var signature_method = "HmacSHA1";
   
   /****  PRIVATE FUNCTIONS ****/
   /**
@@ -57,7 +58,8 @@ function SDB(access_key, secret_key, endpoint, version) {
     params["AWSAccessKeyId"]   = aws_access_key;
     params["Version"]          = sdb_version;
     params["SignatureVersion"] = 1;
-    params["Signature"]        = AwsUtil.generateSignature(params, aws_secret_key);    
+    params["SignatureMethod"]  = signature_method;
+    params["Signature"]        = AwsUtil.generateSignature(params, aws_secret_key); 
     var encoded_params = [];
     for(var key in params) {
       encoded_params.push(key + "=" + encodeURIComponent(params[key]));
